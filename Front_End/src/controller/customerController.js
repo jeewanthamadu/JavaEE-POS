@@ -1,5 +1,6 @@
 /*_________________customer part______________________*/
 generateId();
+loadTableCusData();
 
 /* ____________________Validation - Start */
 $('#error1').css({ "display": "none" });
@@ -124,12 +125,25 @@ $("#btnCusClearField").click(function (){
 /*_________customer Table Load___________*/
 function loadTableCusData (){
     $("#customerTableBody").empty();
-    for (var i of customerDB){
+    $.ajax({
+       url:"http://localhost:8080/Back_End/customer?option=GetAll",
+        method:"GET",
+        success:function (rest){
+           for (const customer of rest.data){
+              /* for (var i of customerDB){*/
+                   let raw = `<tr><td>${customer.id}</td><td>${customer.name}</td><td>${customer.address}</td><td>${customer.salary}</td></tr>`
+                   $("#customerTableBody").append(raw);
+                   bindCustomer();
+                   deleteCustomer();
+           }
+        }
+    });
+   /* for (var i of customerDB){
         let raw = `<tr><td>${i.getCustomerID()}</td><td>${i.getCustomerName()}</td><td>${i.getCustomerAddress()}</td><td>${i.getCustomerSalary()}</td></tr>`
         $("#customerTableBody").append(raw);
         bindCustomer();
         deleteCustomer();
-    }
+    }*/
 }
 
 /*_________clear text field___________*/

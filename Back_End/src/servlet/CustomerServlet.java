@@ -71,6 +71,6 @@ public class CustomerServlet extends HttpServlet {
                 throwables.printStackTrace();
             }
         }
-        System.out.println("badu wadi wela");
+       /* System.out.println("badu wadi wela");*/
     }
 }
