@@ -47,7 +47,26 @@ function validation(regEx, id, error, nextId, btn) {
 
 /*_________customer save___________*/
 $("#btnCusAdd").click(function (){
-    let customerId = $("#txtCusID").val();
+
+    $.ajax({url:"http://localhost:8080/Back_End/customer",
+        method:"POST",
+        data:$("#customerForm").serialize(),
+        success:function (resp){
+            if (resp.status==200){
+               /* clearFields();*/
+                loadTableCusData();
+                // generateId();
+                // loadAllCustomerIds();
+            }else {
+                alert(resp.data)
+            }
+        },error:function (ob,textStatus,error){
+        console.log(ob);
+        console.log(textStatus);
+        console.log(error);
+        }
+    });
+    /*let customerId = $("#txtCusID").val();
     let customerName = $("#txtCusName").val();
     let customerAddress = $("#txtCusAddress").val();
     let customerSalary = $("#txtCusSalary").val();
@@ -58,7 +77,7 @@ $("#btnCusAdd").click(function (){
     clearFields();
     loadTableCusData();
     generateId();
-    loadAllCustomerIds();
+    loadAllCustomerIds();*/
 
 });
 

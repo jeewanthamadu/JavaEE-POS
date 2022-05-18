@@ -71,6 +71,57 @@ public class CustomerServlet extends HttpServlet {
                 throwables.printStackTrace();
             }
         }
-       /* System.out.println("badu wadi wela");*/
+
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        String id = req.getParameter("id");
+        String name = req.getParameter("name");
+        String address = req.getParameter("address");
+        String salary = req.getParameter("salary");
+
+        PrintWriter writer = resp.getWriter();
+
+        Connection connection=null;
+        try {
+            connection = ds.getConnection();
+            PreparedStatement pstm = connection.prepareStatement("INSERT INTO customer VALUES(?,?,?,?)");
+            pstm.setObject(1,id);
+            pstm.setObject(2,name);
+            pstm.setObject(3,address);
+            pstm.setObject(4,salary);
+
+            if (pstm.executeUpdate()>0){
+                JsonObjectBuilder response = Json.createObjectBuilder();
+                resp.setStatus(HttpServletResponse.SC_CREATED);
+                response.add("status",200);
+                response.add("message","Added SuccessFully");
+                response.add("data","");
+
+                writer.print(response.build());
+            }
+
+        }catch (SQLException throwables){
+
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            resp.setStatus(HttpServletResponse.SC_OK);
+            response.add("status",400);
+            response.add("message","Error");
+            response.add("data",throwables.getLocalizedMessage());
+
+            writer.print(response.build());
+
+            throwables.printStackTrace();
+
+        }finally {
+            try {
+                connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+
     }
 }
