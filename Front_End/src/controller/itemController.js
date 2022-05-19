@@ -8,17 +8,32 @@ generateItemId();
 /*_________item save___________*/
 $("#btnItemAdd").click(function (){
 
-    let itemId = $("#txtItemID").val();
+    $.ajax({url:"http://localhost:8080/Back_End/item",
+        method:"POST",
+        data:$("#itemForm").serialize(),
+        success:function (resp){
+            if (resp.status==200){
+                /* clearFields();*/
+                loadTableItemData();
+                clearItemFields();
+                generateItemId();
+                loadAllItemIds();
+            }else {
+                alert(resp.data)
+            }
+        },error:function (ob,textStatus,error){
+            console.log(ob);
+            console.log(textStatus);
+            console.log(error);
+        }
+    });
+
+
+
+    /*let itemId = $("#txtItemID").val();
     let itemName = $("#txtItemName").val();
     let itemQty = $("#txtItemQty").val();
     let itemPrice = $("#txtItemPrice").val();
-
-    /*var itemOB ={
-        id:itemId,
-        name:itemName,
-        qty:itemQty,
-        price:itemPrice
-    }*/
 
     var itemOB=new ItemDTO(itemId,itemName,itemQty,itemPrice);
 
@@ -26,7 +41,7 @@ $("#btnItemAdd").click(function (){
     clearItemFields();
     loadTableItemData();
     generateItemId();
-    loadAllItemIds();
+    loadAllItemIds();*/
 });
 
 
@@ -91,15 +106,22 @@ $("#btnItemClear").click(function (){
 
 
 /*_________customer Table Load___________*/
-function loadTableItemData (){
+function loadTableItemData () {
     $("#tblItem").empty();
-    for (var i of itemDB){
-        let raw = `<tr><td>${i.getItemID()}</td><td>${i.getItemName()}</td><td>${i.getItemQty()}</td><td>${i.getItemPrice()}</td></tr>`
-        $("#tblItem").append(raw);
-        bindItem();
-        deleteItem();
+    $.ajax({
+        url: "http://localhost:8080/Back_End/item?option=GetAll",
+        method: "GET",
+        success: function (rest) {
+            for (const item of rest.data) {
+                let raw = `<tr><td>${item.itemId}</td><td>${item.itemName}</td><td>${item.itemQty}</td><td>${item.itemPrice}</td></tr>`
+                $("#tblItem").append(raw);
+                bindItem();
+                deleteItem();
 
-    }
+            }
+        }
+    });
+
 }
 /*_________clear Item text field___________*/
 function clearItemFields (){
@@ -151,3 +173,5 @@ function generateItemId() {
     }
 
 }
+
+
