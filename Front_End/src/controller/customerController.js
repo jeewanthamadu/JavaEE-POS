@@ -106,14 +106,28 @@ $("#btnCusUpdate").click(function (){
 function deleteCustomer (){
 $("#btnCusDelete").click(function (){
     let getClickData=$("#txtCusID").val();
-    for (let i=0;i<customerDB.length;i++){
+
+    $.ajax({
+        url:`http://localhost:8080/Back_End/customer?customerID=${getClickData}`,
+        method:"DELETE",
+        success:function (resp){
+            if (resp.status==200){
+                loadTableCusData();
+            }else{
+                alert(resp.data);
+            }
+        }
+    });
+
+
+    /*for (let i=0;i<customerDB.length;i++){
         if (customerDB[i].getCustomerID()==getClickData){
             customerDB.splice(i, 1);
         }
     }
     clearFields();
     loadTableCusData();
-generateId();
+generateId();*/
 });
 }
 
@@ -141,7 +155,6 @@ $("#btnCusClearField").click(function (){
     clearFields();
 });
 
-generateId();
 
 /*_________customer Table Load___________*/
 function loadTableCusData (){
@@ -222,7 +235,7 @@ function generateId() {
         method:"GET",
         success:function (resp){
             if (resp.status==200){
-                $("#txtCusID1").val(resp.data.id);
+                $("#txtCusID").val(resp.data.id);
             }else{
                 alert(resp.data)
             }
