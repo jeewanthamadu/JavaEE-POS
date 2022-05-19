@@ -14,7 +14,6 @@ $("#btnItemAdd").click(function (){
         data:$("#itemForm").serialize(),
         success:function (resp){
             if (resp.status==200){
-                /* clearFields();*/
                 loadTableItemData();
                 clearItemFields();
                 generateItemId();
@@ -29,20 +28,6 @@ $("#btnItemAdd").click(function (){
         }
     });
 
-
-
-    /*let itemId = $("#txtItemID").val();
-    let itemName = $("#txtItemName").val();
-    let itemQty = $("#txtItemQty").val();
-    let itemPrice = $("#txtItemPrice").val();
-
-    var itemOB=new ItemDTO(itemId,itemName,itemQty,itemPrice);
-
-    itemDB.push(itemOB);
-    clearItemFields();
-    loadTableItemData();
-    generateItemId();
-    loadAllItemIds();*/
 });
 
 
@@ -64,9 +49,33 @@ function bindItem (){
 
 };
 
-/*_________Update Customer___________*/
+/*_________Update Item___________*/
 $("#btnItemUpdate").click(function (){
-    let itemId = $("#txtItemID").val();
+
+    var cusOb = {
+        itemId: $("#txtItemID").val(),
+        itemName: $("#txtItemName").val(),
+        itemQty: $("#txtItemQty").val(),
+        itemPrice: $("#txtItemPrice").val()
+    }
+
+    $.ajax({
+        url: "http://localhost:8080/Back_End/item",
+        method: "PUT",
+        data: JSON.stringify(cusOb),
+        success: function (resp) {
+            if (resp.status == 200) {
+                loadTableItemData();
+                clearItemFields();
+                generateItemId();
+            } else if (resp.status == 400) {
+                alert(resp.data);
+            }
+        }
+    });
+
+
+    /*let itemId = $("#txtItemID").val();
     let itemName = $("#txtItemName").val();
     let itemQty = $("#txtItemQty").val();
     let itemPrice = $("#txtItemPrice").val();
@@ -80,7 +89,7 @@ $("#btnItemUpdate").click(function (){
     }
     loadTableItemData();
     clearItemFields();
-    generateItemId();
+    generateItemId();*/
 });
 
 
@@ -114,7 +123,7 @@ $("#btnItemClear").click(function (){
 });
 
 
-/*_________customer Table Load___________*/
+/*_________Item Table Load___________*/
 function loadTableItemData () {
     $("#tblItem").empty();
     $.ajax({
@@ -132,6 +141,7 @@ function loadTableItemData () {
     });
 
 }
+
 /*_________clear Item text field___________*/
 function clearItemFields (){
     $("#txtItemID,#txtItemName,#txtItemQty,#txtItemPrice").val("");
@@ -152,6 +162,7 @@ $("#btnItemSearch").click(function (){
         clearFields();
     }
 });
+
 function searchItem (id){
     for (let i=0;i<itemDB.length;i++){
         if (itemDB[i].getItemID()==id){

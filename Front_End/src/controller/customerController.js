@@ -83,7 +83,7 @@ $("#btnCusUpdate").click(function (){
 
     $.ajax({
         url: "http://localhost:8080/Back_End/customer",
-        method: "PUT", // contentType: "application/json",
+        method: "PUT",
         data: JSON.stringify(cusOb),
         success: function (resp) {
             if (resp.status == 200) {
@@ -95,22 +95,6 @@ $("#btnCusUpdate").click(function (){
             }
         }
     });
-
-   /* let customerId = $("#txtCusID").val();
-    let customerName = $("#txtCusName").val();
-    let customerAddress = $("#txtCusAddress").val();
-    let customerSalary = $("#txtCusSalary").val();
-
-    for (var i=0;i<customerDB.length;i++){
-        if (customerDB[i].getCustomerID()==customerId){
-        customerDB[i].setCustomerName(customerName);
-        customerDB[i].setCustomerAddress(customerAddress);
-        customerDB[i].setCustomerSalary(customerSalary);
-        }
-    }
-    loadTableCusData();
-    clearFields();
-    generateId();*/
 
 });
 
