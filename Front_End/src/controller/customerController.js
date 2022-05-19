@@ -55,8 +55,8 @@ $("#btnCusAdd").click(function (){
             if (resp.status==200){
                /* clearFields();*/
                 loadTableCusData();
-                // generateId();
-                // loadAllCustomerIds();
+                generateId();
+                loadAllCustomerIds();
             }else {
                 alert(resp.data)
             }
@@ -141,6 +141,8 @@ $("#btnCusClearField").click(function (){
     clearFields();
 });
 
+generateId();
+
 /*_________customer Table Load___________*/
 function loadTableCusData (){
     $("#customerTableBody").empty();
@@ -214,23 +216,34 @@ function searchCustomer (id){
 
 /*_________Auto Generate ID___________*/
 function generateId() {
-    let index = customerDB.length - 1;
-    let id;
-    let temp;
-    if (index != -1) {
-        id = customerDB[customerDB.length - 1].getCustomerID();
-        temp = id.split("-")[1];
-        temp++;
-    }
-
-    if (index == -1) {
-        $("#txtCusID").val("C00-001");
-    } else if (temp <= 9) {
-        $("#txtCusID").val("C00-00" + temp);
-    } else if (temp <= 99) {
-        $("#txtCusID").val("C00-0" + temp);
-    } else {
-        $("#txtCusID").val("C00-" + temp);
-    }
-
-}
+   /* let index = customerDB.length - 1;*/
+    $.ajax({
+        url:"http://localhost:8080/Back_End/customer?option=GenId",
+        method:"GET",
+        success:function (resp){
+            if (resp.status==200){
+                $("#txtCusID1").val(resp.data.id);
+            }else{
+                alert(resp.data)
+            }
+        }
+    });
+//     let id;
+//     let temp;
+//     if (index != -1) {
+//         id = customerDB[customerDB.length - 1].getCustomerID();
+//         temp = id.split("-")[1];
+//         temp++;
+//     }
+//
+//     if (index == -1) {
+//         $("#txtCusID").val("C00-001");
+//     } else if (temp <= 9) {
+//         $("#txtCusID").val("C00-00" + temp);
+//     } else if (temp <= 99) {
+//         $("#txtCusID").val("C00-0" + temp);
+//     } else {
+//         $("#txtCusID").val("C00-" + temp);
+//     }
+//
+ }
