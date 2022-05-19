@@ -66,25 +66,37 @@ $("#btnCusAdd").click(function (){
         console.log(error);
         }
     });
-    /*let customerId = $("#txtCusID").val();
-    let customerName = $("#txtCusName").val();
-    let customerAddress = $("#txtCusAddress").val();
-    let customerSalary = $("#txtCusSalary").val();
 
-    var customerOB=new CustomerDTO(customerId,customerName,customerAddress,customerSalary);
-
-    customerDB.push(customerOB);
-    clearFields();
-    loadTableCusData();
-    generateId();
-    loadAllCustomerIds();*/
 
 });
 
 
 /*_________Update Customer___________*/
 $("#btnCusUpdate").click(function (){
-    let customerId = $("#txtCusID").val();
+
+    var cusOb = {
+        id: $("#txtCusID").val(),
+        name: $("#txtCusName").val(),
+        address: $("#txtCusAddress").val(),
+        salary: $("#txtCusSalary").val()
+    }
+
+    $.ajax({
+        url: "http://localhost:8080/Back_End/customer",
+        method: "PUT", // contentType: "application/json",
+        data: JSON.stringify(cusOb),
+        success: function (resp) {
+            if (resp.status == 200) {
+                loadTableCusData();
+                clearFields();
+                generateId();
+            } else if (resp.status == 400) {
+                alert(resp.data);
+            }
+        }
+    });
+
+   /* let customerId = $("#txtCusID").val();
     let customerName = $("#txtCusName").val();
     let customerAddress = $("#txtCusAddress").val();
     let customerSalary = $("#txtCusSalary").val();
@@ -98,7 +110,8 @@ $("#btnCusUpdate").click(function (){
     }
     loadTableCusData();
     clearFields();
-    generateId();
+    generateId();*/
+
 });
 
 
@@ -119,15 +132,6 @@ $("#btnCusDelete").click(function (){
         }
     });
 
-
-    /*for (let i=0;i<customerDB.length;i++){
-        if (customerDB[i].getCustomerID()==getClickData){
-            customerDB.splice(i, 1);
-        }
-    }
-    clearFields();
-    loadTableCusData();
-generateId();*/
 });
 }
 
