@@ -3,6 +3,7 @@
 /*_________________________item part__________________________________*/
 
 generateItemId();
+loadTableItemData();
 
 
 /*_________item save___________*/
@@ -87,14 +88,22 @@ $("#btnItemUpdate").click(function (){
 function deleteItem (){
     $("#btnItemDelete").click(function (){
         let getClickItemData=$("#txtItemID").val();
-        for (let i=0;i<itemDB.length;i++){
-            if (itemDB[i].getItemID()==getClickItemData){
-                itemDB.splice(i, 1);
+
+
+        $.ajax({
+            url:`http://localhost:8080/Back_End/item?itemID=${getClickItemData}`,
+            method:"DELETE",
+            success:function (resp){
+                if (resp.status==200){
+                    loadTableItemData();
+                    generateItemId();
+                    clearItemFields();
+                }else{
+                    alert(resp.data);
+                }
             }
-        }
-        clearItemFields();
-        loadTableItemData();
-        generateItemId();
+        });
+
     });
 }
 
@@ -153,24 +162,19 @@ function searchItem (id){
 
 /*_________Auto Generate Item ID___________*/
 function generateItemId() {
-    let index = itemDB.length - 1;
-    let id;
-    let temp;
-    if (index != -1) {
-        id = itemDB[itemDB.length - 1].getItemID();
-        temp = id.split("-")[1];
-        temp++;
-    }
 
-    if (index == -1) {
-        $("#txtItemID").val("I00-001");
-    } else if (temp <= 9) {
-        $("#txtItemID").val("I00-00" + temp);
-    } else if (temp <= 99) {
-        $("#txtItemID").val("I00-0" + temp);
-    } else {
-        $("#txtItemID").val("I00-" + temp);
-    }
+    $.ajax({
+        url:"http://localhost:8080/Back_End/item?option=GenId",
+        method:"GET",
+        success:function (resp){
+            if (resp.status==200){
+                $("#txtItemID").val(resp.data.code);
+            }else{
+                alert(resp.data)
+            }
+        }
+    });
+
 
 }
 

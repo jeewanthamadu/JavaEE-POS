@@ -63,6 +63,30 @@ public class ItemServlet extends HttpServlet {
                     writer.print(dataMsgBuilder.build());
                     break;
 
+
+                case "GenId":
+                    ResultSet rst = connection.prepareStatement("SELECT code FROM item ORDER BY code DESC LIMIT 1").executeQuery();
+                    if (rst.next()) {
+                        int tempId = Integer.parseInt(rst.getString(1).split("-")[1]);
+                        tempId+=1;
+                        if (tempId < 10) {
+                            objectBuilder.add("code", "I00-00" + tempId);
+                        } else if (tempId < 100) {
+                            objectBuilder.add("code", "I00-0" + tempId);
+                        } else if (tempId < 1000) {
+                            objectBuilder.add("code", "I00-" + tempId);
+                        }
+                    }else{
+                        objectBuilder.add("code", "I00-000");
+                    }
+                    dataMsgBuilder.add("data",objectBuilder.build());
+                    dataMsgBuilder.add("message","Done");
+                    dataMsgBuilder.add("status",200);
+                    writer.print(dataMsgBuilder.build());
+
+                    break;
+
+
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -125,6 +149,41 @@ public class ItemServlet extends HttpServlet {
             }
         }
 
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        String itemID = req.getParameter("itemID");
+        JsonObjectBuilder dataMsgBuilder = Json.createObjectBuilder();
+        PrintWriter writer = resp.getWriter();
+
+        Connection connection = null;
+        try {
+            connection = ds.getConnection();
+            PreparedStatement pstm = connection.prepareStatement("DELETE FROM item WHERE code=?");
+            pstm.setObject(1, itemID);
+
+            if (pstm.executeUpdate() > 0) {
+                resp.setStatus(HttpServletResponse.SC_OK); //200
+                dataMsgBuilder.add("data", "");
+                dataMsgBuilder.add("massage", "Item Deleted");
+                dataMsgBuilder.add("status", "200");
+                writer.print(dataMsgBuilder.build());
+            }
+        } catch (SQLException e) {
+            dataMsgBuilder.add("status", 400);
+            dataMsgBuilder.add("message", "Error");
+            dataMsgBuilder.add("data", e.getLocalizedMessage());
+            writer.print(dataMsgBuilder.build());
+            resp.setStatus(HttpServletResponse.SC_OK); //200
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
