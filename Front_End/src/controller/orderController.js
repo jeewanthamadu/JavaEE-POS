@@ -45,7 +45,22 @@ $("#itemIdCmb").change(function (e){
 
 /*_________Auto Generate Order ID___________*/
 function generateOrderId() {
-    let index = orderDB.length - 1;
+
+
+    $.ajax({
+        url: "http://localhost:8080/Back_End/order?option=GENERATED_OID",
+        method: 'GET',
+        success: function (resp) {
+            if (resp.status == 200) {
+                $("#txtOrderId").val(resp.data.oId);
+            } else {
+                alert(resp.data);
+            }
+        }
+
+    });
+
+   /* let index = orderDB.length - 1;
     let id;
     let temp;
     if (index != -1) {
@@ -62,7 +77,7 @@ function generateOrderId() {
         $("#txtOrderId").val("O00-0" + temp);
     } else {
         $("#txtOrderId").val("O00-" + temp);
-    }
+    }*/
 
 }
 
@@ -84,13 +99,11 @@ function loadAllCustomerIds() {
                     let option = `<option value="${customer.id}">${customer.id}</option>`;
                     $("#orderCusIdCmb").append(option);
                 }
-
             }else {
                 alert(resp.data)
             }
         }
         })
-
     }
 
 /* __________________________load item ids to cmb ______________________*/
@@ -121,7 +134,6 @@ function loadAllItemIds() {
 
 /*__________________load item data to text fields___________________*/
 function selectedItem(ItemId) {
-
     $.ajax({
         url: `http://localhost:8080/Back_End/order?option=selectedItemData&itemId=${ItemId}`,
         method: "GET",
@@ -148,7 +160,6 @@ function selectedCustomer(CustomerId){
     $.ajax({
         url: `http://localhost:8080/Back_End/order?option=selectedCusData&cusId=${CustomerId}`,
         method: "GET",
-        /*data: $("#itemIdCmb").serialize(),*/
         success: function (resp) {
            if (resp.status == 200) {
                 for (const customer of resp.data) {
@@ -162,7 +173,6 @@ function selectedCustomer(CustomerId){
             }
         }
     })
-
 
 }
 
@@ -288,8 +298,54 @@ function discountCal() {
 
 /* ________Purchase ______________*/
 function purchaseOrder() {
+    var obj = {
+        order: {
+            orderId:$("#txtOrderId").val(),
+            customer: selectedCustomerId,
+            orderDate: $("#txtOrderDate").val(),
+            discount: parseInt($("#dis").val()),
+            total: $("#lblTotal").text().split(" ")[0],
+            subTotal: $("#lblFullTotal").text().split(" ")[0]
+        },
+        orderDetail:[]
+    }
 
-    let orderId = $("#txtOrderId").val();
+    for (let i = 0; i < $('#orderTbody tr').length; i++) {
+
+        tblItemId = $('#orderTbody').children().eq(i).children().eq(0).text();
+        tblItemName = $('#orderTbody').children().eq(i).children().eq(1).text();
+        tblItemPrice = $('#orderTbody').children().eq(i).children().eq(2).text();
+        tblItemQty = $('#orderTbody').children().eq(i).children().eq(3).text();
+        tblItemTotal = $('#orderTbody').children().eq(i).children().eq(4).text();
+
+        var details = {
+            itemCode:tblItemId,
+            itemName:tblItemName,
+            itemPrice:tblItemPrice,
+            itemQty:tblItemQty,
+            itemTotal:tblItemTotal
+        }
+        obj.orderDetail.push(details);
+
+    }
+    console.log(JSON.stringify(obj));
+
+    $.ajax({
+        url: "http://localhost:8080/Back_End/order",
+        method: "POST",
+        data: JSON.stringify(obj),
+        success: function (resp) {
+            if (resp.status==200){
+                generateOrderId();
+            }else {
+                alert(resp.data);
+            }
+        }
+    });
+
+
+
+    /*let orderId = $("#txtOrderId").val();
     let customer = selectedCustomerId;
     let orderDate = $("#txtOrderDate").val();
     let discount = parseInt($("#dis").val());
@@ -309,6 +365,8 @@ function purchaseOrder() {
 
         var orderDetailObj = new OrderDetailDTO(orderId,tblItemId,tblItemName,tblItemPrice,tblItemQty,tblItemTotal);
         orderDetailDB.push(orderDetailObj);
-    }
+    }*/
+
+
 
 }
