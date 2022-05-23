@@ -74,22 +74,6 @@ $("#btnItemUpdate").click(function (){
         }
     });
 
-
-    /*let itemId = $("#txtItemID").val();
-    let itemName = $("#txtItemName").val();
-    let itemQty = $("#txtItemQty").val();
-    let itemPrice = $("#txtItemPrice").val();
-
-    for (var i=0;i<itemDB.length;i++){
-        if ( itemDB[i].getItemID()==itemId){
-        itemDB[i].setItemName(itemName);
-        itemDB[i].setItemQty(itemQty);
-        itemDB[i].setItemPrice(itemPrice);
-        }
-    }
-    loadTableItemData();
-    clearItemFields();
-    generateItemId();*/
 });
 
 

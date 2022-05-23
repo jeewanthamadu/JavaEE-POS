@@ -193,7 +193,6 @@ public class CustomerServlet extends HttpServlet {
         String cusAddressUpdate = jsonObject.getString("address");
         String cusSalaryUpdate = jsonObject.getString("salary");
         PrintWriter writer = resp.getWriter();
-        System.out.println(cusIDUpdate + " " + cusAddressUpdate + " " + cusSalaryUpdate + " " + cusNameUpdate);
 
         Connection connection = null;
         try {

@@ -196,7 +196,6 @@ public class ItemServlet extends HttpServlet {
         String itemQtyUpdate = jsonObject.getString("itemQty");
         String itemPriceUpdate = jsonObject.getString("itemPrice");
         PrintWriter writer = resp.getWriter();
-        //System.out.println(itemIDUpdate + " " + cusAddressUpdate + " " + cusSalaryUpdate + " " + cusNameUpdate);
 
         Connection connection = null;
         try {

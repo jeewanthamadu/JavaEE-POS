@@ -1,6 +1,7 @@
 
 
 generateOrderId();
+loadAllCustomerIds();
 setDate();
 var selectedCustomerId;
 var selectedItemId;
@@ -69,15 +70,31 @@ function generateOrderId() {
 function loadAllCustomerIds() {
     $("#orderCusIdCmb").empty();
 
-    let cusHint=`<option disabled selected> Select Customer ID</option>`;
+    $.ajax({
+        url: "http://localhost:8080/Back_End/order?option=Load_cus_Id",
+        method: "GET",
+        data: $("#customerForm").serialize(),
+        success: function (resp) {
+            if (resp.status == 200) {
+                for (const customer of resp.data) {
+                    let option = `<option value="${customer.id}">${customer.id}</option>`;
+                    $("#orderCusIdCmb").append(option);
+                }
 
-    $("#orderCusIdCmb").append(cusHint);
+            }else {
+                alert(resp.data)
+            }
+        }
+        /*let cusHint=`<option disabled selected> Select Customer ID</option>`;
 
-    for (let i in customerDB) {
-        let option = `<option value="${customerDB[i].getCustomerID()}">${customerDB[i].getCustomerID()}</option>`
-        $("#orderCusIdCmb").append(option);
+        $("#orderCusIdCmb").append(cusHint);
+
+        for (let i in customerDB) {
+            let option = `<option value="${customerDB[i].getCustomerID()}">${customerDB[i].getCustomerID()}</option>`
+            $("#orderCusIdCmb").append(option);
+        }*/})
+
     }
-}
 
 /* __________________________load item ids to cmb ______________________*/
 function loadAllItemIds() {

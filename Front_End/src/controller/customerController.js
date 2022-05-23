@@ -2,6 +2,7 @@
 generateId();
 loadTableCusData();
 
+
 /* ____________________Validation - Start */
 $('#error1').css({ "display": "none" });
 $('#error2').css({ "display": "none" });
@@ -217,7 +218,7 @@ function searchCustomer (id){
 
 /*_________Auto Generate ID___________*/
 function generateId() {
-   /* let index = customerDB.length - 1;*/
+
     $.ajax({
         url:"http://localhost:8080/Back_End/customer?option=GenId",
         method:"GET",
@@ -229,22 +230,4 @@ function generateId() {
             }
         }
     });
-//     let id;
-//     let temp;
-//     if (index != -1) {
-//         id = customerDB[customerDB.length - 1].getCustomerID();
-//         temp = id.split("-")[1];
-//         temp++;
-//     }
-//
-//     if (index == -1) {
-//         $("#txtCusID").val("C00-001");
-//     } else if (temp <= 9) {
-//         $("#txtCusID").val("C00-00" + temp);
-//     } else if (temp <= 99) {
-//         $("#txtCusID").val("C00-0" + temp);
-//     } else {
-//         $("#txtCusID").val("C00-" + temp);
-//     }
-//
- }
+}
