@@ -40,6 +40,21 @@ public class OrderServlet extends HttpServlet {
 
             String option = req.getParameter("option");
             switch (option){
+                case "Load_Item_Id":
+                    rst  = connection.prepareStatement("SELECT code FROM item").executeQuery();
+                    while (rst.next()){
+                        String code = rst.getString(1);
+                        objectBuilder.add("code",code);
+                        arrayBuilder.add(objectBuilder.build());
+                    }
+                    dataMsgBuilder.add("data",arrayBuilder.build());
+                    dataMsgBuilder.add("message","Done");
+                    dataMsgBuilder.add("status",200);
+
+                    writer.print(dataMsgBuilder.build());
+                    break;
+
+
                 case "Load_cus_Id":
                     rst  = connection.prepareStatement("SELECT id FROM customer").executeQuery();
                     while (rst.next()){
@@ -53,8 +68,8 @@ public class OrderServlet extends HttpServlet {
 
                     writer.print(dataMsgBuilder.build());
                     break;
-            }
 
+            }
 
 
         } catch (SQLException throwables) {

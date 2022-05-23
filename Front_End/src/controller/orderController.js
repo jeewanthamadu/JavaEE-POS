@@ -2,6 +2,7 @@
 
 generateOrderId();
 loadAllCustomerIds();
+loadAllItemIds();
 setDate();
 var selectedCustomerId;
 var selectedItemId;
@@ -100,13 +101,33 @@ function loadAllCustomerIds() {
 function loadAllItemIds() {
     $("#itemIdCmb").empty();
 
-    let itemHint=`<option disabled selected> Select Item ID</option>`;
-    $("#itemIdCmb").append(itemHint);
 
-    for (let i in itemDB) {
-        let option = `<option value="${itemDB[i].getItemID()}">${itemDB[i].getItemID()}</option>`
-        $("#itemIdCmb").append(option);
-    }
+    $.ajax({
+        url: "http://localhost:8080/Back_End/order?option=Load_Item_Id",
+        method: "GET",
+        data: $("#itemIdCmb").serialize(),
+        success: function (resp) {
+            if (resp.status == 200) {
+                for (const item of resp.data) {
+                    let option = `<option value="${item.code}">${item.code}</option>`;
+                    $("#itemIdCmb").append(option);
+                }
+
+            }else {
+                alert(resp.data)
+            }
+        }
+       })
+
+
+
+    /* let itemHint=`<option disabled selected> Select Item ID</option>`;
+     $("#itemIdCmb").append(itemHint);
+
+     for (let i in itemDB) {
+         let option = `<option value="${itemDB[i].getItemID()}">${itemDB[i].getItemID()}</option>`
+         $("#itemIdCmb").append(option);
+     }*/
 }
 
 /*__________________load item data to text fields___________________*/
