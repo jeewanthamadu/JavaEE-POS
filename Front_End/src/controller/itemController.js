@@ -2,9 +2,11 @@
 
 /*_________________________item part__________________________________*/
 
-generateItemId();
-loadTableItemData();
 
+$("#navItemPage").click(function (){
+    generateItemId();
+    loadTableItemData();
+});
 
 /*_________item save___________*/
 $("#btnItemAdd").click(function (){
