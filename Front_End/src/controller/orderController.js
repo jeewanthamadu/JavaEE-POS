@@ -89,14 +89,7 @@ function loadAllCustomerIds() {
                 alert(resp.data)
             }
         }
-        /*let cusHint=`<option disabled selected> Select Customer ID</option>`;
-
-        $("#orderCusIdCmb").append(cusHint);
-
-        for (let i in customerDB) {
-            let option = `<option value="${customerDB[i].getCustomerID()}">${customerDB[i].getCustomerID()}</option>`
-            $("#orderCusIdCmb").append(option);
-        }*/})
+        })
 
     }
 
@@ -127,15 +120,26 @@ function loadAllItemIds() {
 }
 
 /*__________________load item data to text fields___________________*/
-function selectedItem(ItemId){
-    for (const i in itemDB){
-        if (itemDB[i].getItemID()==ItemId) {
-            let element = itemDB[i];
-            $("#txtOrderItemName").val(element.getItemName());
-            $("#txtQtyOnHand").val(element.getItemQty());
-            $("#txtPrice").val(element.getItemPrice());
+function selectedItem(ItemId) {
+
+    $.ajax({
+        url: `http://localhost:8080/Back_End/order?option=selectedItemData&itemId=${ItemId}`,
+        method: "GET",
+        success: function (resp) {
+            if (resp.status == 200) {
+                for (const item of resp.data) {
+                    $("#txtOrderItemName").val(item.itemName);
+                    $("#txtQtyOnHand").val(item.itemQtyOnHand);
+                    $("#txtPrice").val(item.itemPrice);
+                }
+
+            }else {
+                alert(resp.data)
+            }
         }
-    }
+    })
+
+
 }
 
 /*_________________load customer data to text fields________________*/
