@@ -71,6 +71,9 @@ function generateOrderId() {
 function loadAllCustomerIds() {
     $("#orderCusIdCmb").empty();
 
+    let cusIdNoneSelect = `<option disabled selected>Select Customer ID</option>`;
+    $("#orderCusIdCmb").append(cusIdNoneSelect);
+
     $.ajax({
         url: "http://localhost:8080/Back_End/order?option=Load_cus_Id",
         method: "GET",
@@ -101,6 +104,8 @@ function loadAllCustomerIds() {
 function loadAllItemIds() {
     $("#itemIdCmb").empty();
 
+    let itemIdNoneSelect = `<option disabled selected>Select Customer ID</option>`;
+    $("#itemIdCmb").append(itemIdNoneSelect);
 
     $.ajax({
         url: "http://localhost:8080/Back_End/order?option=Load_Item_Id",
@@ -119,15 +124,6 @@ function loadAllItemIds() {
         }
        })
 
-
-
-    /* let itemHint=`<option disabled selected> Select Item ID</option>`;
-     $("#itemIdCmb").append(itemHint);
-
-     for (let i in itemDB) {
-         let option = `<option value="${itemDB[i].getItemID()}">${itemDB[i].getItemID()}</option>`
-         $("#itemIdCmb").append(option);
-     }*/
 }
 
 /*__________________load item data to text fields___________________*/
@@ -144,14 +140,26 @@ function selectedItem(ItemId){
 
 /*_________________load customer data to text fields________________*/
 function selectedCustomer(CustomerId){
-    for (const i in customerDB){
-        if (customerDB[i].getCustomerID()==CustomerId) {
-            let element = customerDB[i];
-            $("#txtOCusName").val(element.getCustomerName());
-            $("#txtSalary").val(element.getCustomerSalary());
-            $("#txtAddress").val(element.getCustomerAddress());
+
+    $.ajax({
+        url: `http://localhost:8080/Back_End/order?option=selectedCusData&cusId=${CustomerId}`,
+        method: "GET",
+        /*data: $("#itemIdCmb").serialize(),*/
+        success: function (resp) {
+           if (resp.status == 200) {
+                for (const customer of resp.data) {
+                    $("#txtOCusName").val(customer.cusName);
+                    $("#txtAddress").val(customer.cusAddress);
+                    $("#txtSalary").val(customer.cusSalary);
+                }
+
+            }else {
+                alert(resp.data)
+            }
         }
-    }
+    })
+
+
 }
 
 /*__________set Date____________*/
