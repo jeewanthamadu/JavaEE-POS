@@ -1,5 +1,9 @@
 package servlet;
 
+import bo.BOFactory;
+import bo.custom.impl.CustomerBOImpl;
+import dto.CustomerDTO;
+
 import javax.annotation.Resource;
 import javax.json.*;
 import javax.servlet.ServletException;
@@ -17,8 +21,12 @@ import java.sql.SQLException;
 
 @WebServlet(urlPatterns = "/customer")
 public class CustomerServlet extends HttpServlet {
+
+    CustomerBOImpl customerBO = (CustomerBOImpl) BOFactory.getBoFactory().getBO(BOFactory.BoTypes.CUSTOMER);
+
     @Resource(name = "java:comp/env/jdbc/pool")
-    DataSource ds;
+    public static DataSource ds;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -102,18 +110,20 @@ public class CustomerServlet extends HttpServlet {
         String address = req.getParameter("address");
         String salary = req.getParameter("salary");
 
+        CustomerDTO customerDTO = new CustomerDTO(id, name, address, Double.parseDouble(salary));
+
         PrintWriter writer = resp.getWriter();
 
-        Connection connection=null;
-        try {
-            connection = ds.getConnection();
-            PreparedStatement pstm = connection.prepareStatement("INSERT INTO customer VALUES(?,?,?,?)");
-            pstm.setObject(1,id);
-            pstm.setObject(2,name);
-            pstm.setObject(3,address);
-            pstm.setObject(4,salary);
+       /*Connection connection=null;*/
+     try {
+           /*connection = ds.getConnection();
+           PreparedStatement pstm = connection.prepareStatement("INSERT INTO customer VALUES(?,?,?,?)");
+           pstm.setObject(1,id);
+           pstm.setObject(2,name);
+           pstm.setObject(3,address);
+           pstm.setObject(4,salary);*/
 
-            if (pstm.executeUpdate()>0){
+            if ( customerBO.addCustomer(customerDTO)){
                 JsonObjectBuilder response = Json.createObjectBuilder();
                 resp.setStatus(HttpServletResponse.SC_CREATED);
                 response.add("status",200);
@@ -135,13 +145,13 @@ public class CustomerServlet extends HttpServlet {
 
             throwables.printStackTrace();
 
-        }finally {
+        }/*finally {
             try {
                 connection.close();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-        }
+        }*/
 
     }
 

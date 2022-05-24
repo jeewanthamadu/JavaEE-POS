@@ -19,7 +19,7 @@ import java.sql.SQLException;
 @WebServlet(urlPatterns = "/order")
 public class OrderServlet extends HttpServlet {
     @Resource(name = "java:comp/env/jdbc/pool")
-    DataSource ds;
+    public static DataSource ds;
     Connection connection=null;
 
     @Override
