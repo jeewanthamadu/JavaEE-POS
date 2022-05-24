@@ -19,12 +19,13 @@ ItemDAOImpl itemDAO = (ItemDAOImpl) DAOFactory.getDAOFactory().getDAO(DAOFactory
     }
 
     @Override
-    public boolean deleteItem(String id) {
-        return false;
+    public boolean deleteItem(String id) throws SQLException {
+        return itemDAO.delete(id);
     }
 
     @Override
-    public boolean updateItem(ItemDTO itemDTO) {
-        return false;
+    public boolean updateItem(ItemDTO itemDTO) throws SQLException {
+        return itemDAO.update(new Item(itemDTO.getCode(), itemDTO.getDescription(),itemDTO.getQtyOnHand(),itemDTO.getUnitPrice()));
+
     }
 }
