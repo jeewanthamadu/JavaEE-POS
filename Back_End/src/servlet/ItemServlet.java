@@ -1,5 +1,9 @@
 package servlet;
 
+import bo.BOFactory;
+import bo.custom.impl.ItemBOImpl;
+import dto.ItemDTO;
+
 import javax.annotation.Resource;
 import javax.json.*;
 import javax.servlet.ServletException;
@@ -16,8 +20,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
-@WebServlet(urlPatterns = "/Item")
+@WebServlet(urlPatterns = "/item")
 public class ItemServlet extends HttpServlet {
+
+    ItemBOImpl itemBO = (ItemBOImpl) BOFactory.getBoFactory().getBO(BOFactory.BoTypes.ITEM);
+
     @Resource(name = "java:comp/env/jdbc/pool")
     public static DataSource ds;
 
@@ -106,18 +113,20 @@ public class ItemServlet extends HttpServlet {
         String qty = req.getParameter("itemQty");
         String price = req.getParameter("itemPrice");
 
+        ItemDTO itemDTO = new ItemDTO(id, name,Integer.parseInt(qty), Double.parseDouble(price));
+
         PrintWriter writer = resp.getWriter();
 
-        Connection connection=null;
+       /* Connection connection=null;*/
         try {
-            connection = ds.getConnection();
+            /*connection = ds.getConnection();
             PreparedStatement pstm = connection.prepareStatement("INSERT INTO item VALUES(?,?,?,?)");
             pstm.setObject(1,id);
             pstm.setObject(2,name);
             pstm.setObject(3,qty);
             pstm.setObject(4,price);
-
-            if (pstm.executeUpdate()>0){
+*/
+            if ( itemBO.addItem(itemDTO)){
                 JsonObjectBuilder response = Json.createObjectBuilder();
                 resp.setStatus(HttpServletResponse.SC_CREATED);
                 response.add("status",200);
@@ -139,13 +148,13 @@ public class ItemServlet extends HttpServlet {
 
             throwables.printStackTrace();
 
-        }finally {
+        }/*finally {
             try {
                 connection.close();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-        }
+        }*/
 
     }
 
