@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 public interface CustomerBO extends SuperBO {
     boolean addCustomer(CustomerDTO customerDTO) throws SQLException;
-    boolean deleteCustomer(String id);
-    boolean updateCustomer(CustomerDTO customerDTO);
+    boolean deleteCustomer(String id) throws SQLException;
+    boolean updateCustomer(CustomerDTO customerDTO) throws SQLException;
 
 }

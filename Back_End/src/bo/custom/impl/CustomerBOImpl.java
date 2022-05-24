@@ -17,12 +17,12 @@ CustomerDAOImpl customerDAO = (CustomerDAOImpl) DAOFactory.getDAOFactory().getDA
     }
 
     @Override
-    public boolean deleteCustomer(String id) {
-        return false;
+    public boolean deleteCustomer(String id) throws SQLException {
+        return customerDAO.delete(id);
     }
 
     @Override
-    public boolean updateCustomer(CustomerDTO customerDTO) {
-        return false;
+    public boolean updateCustomer(CustomerDTO customerDTO) throws SQLException {
+        return customerDAO.update(new Customer(customerDTO.getId(), customerDTO.getName(), customerDTO.getAddress(), customerDTO.getSalary()));
     }
 }
