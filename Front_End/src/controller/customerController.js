@@ -71,7 +71,6 @@ $("#btnCusAdd").click(function (){
 
 });
 
-
 /*_________Update Customer___________*/
 $("#btnCusUpdate").click(function (){
 
@@ -99,7 +98,6 @@ $("#btnCusUpdate").click(function (){
 
 });
 
-
 /*_________Delete Customer___________*/
 function deleteCustomer (){
 $("#btnCusDelete").click(function (){
@@ -119,8 +117,6 @@ $("#btnCusDelete").click(function (){
 
 });
 }
-
-
 
 /*_________click customer Table ___________*/
 function bindCustomer (){
@@ -143,7 +139,6 @@ function bindCustomer (){
 $("#btnCusClearField").click(function (){
     clearFields();
 });
-
 
 /*_________customer Table Load___________*/
 function loadTableCusData (){
@@ -193,9 +188,10 @@ $("#txtCusAddress").keydown(function (event) {
     }
 });
 
-
 /*_________Customer Search bar___________*/
 $("#btnCusSearch").click(function (){
+
+
     var searchId = $("#txtCusSearch").val();
     var response = searchCustomer(searchId);
     if (response){
@@ -207,14 +203,19 @@ $("#btnCusSearch").click(function (){
         alert("Invalid customer Search");
         clearFields();
     }
+
 });
+
+
 function searchCustomer (id){
     for (let i=0;i<customerDB.length;i++){
         if (customerDB[i].getCustomerID()==id){
             return customerDB[i];
+
         }
     }
 }
+
 
 /*_________Auto Generate ID___________*/
 function generateId() {

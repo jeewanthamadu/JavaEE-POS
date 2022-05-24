@@ -149,6 +149,7 @@ $("#btnItemSearch").click(function (){
     }
 });
 
+
 function searchItem (id){
     for (let i=0;i<itemDB.length;i++){
         if (itemDB[i].getItemID()==id){

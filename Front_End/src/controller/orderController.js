@@ -46,7 +46,6 @@ $("#itemIdCmb").change(function (e){
 /*_________Auto Generate Order ID___________*/
 function generateOrderId() {
 
-
     $.ajax({
         url: "http://localhost:8080/Back_End/order?option=GENERATED_OID",
         method: 'GET',
@@ -59,25 +58,6 @@ function generateOrderId() {
         }
 
     });
-
-   /* let index = orderDB.length - 1;
-    let id;
-    let temp;
-    if (index != -1) {
-        id = orderDB[orderDB.length - 1].getOrderID();
-        temp = id.split("-")[1];
-        temp++;
-    }
-
-    if (index == -1) {
-        $("#txtOrderId").val("O00-001");
-    } else if (temp <= 9) {
-        $("#txtOrderId").val("O00-00" + temp);
-    } else if (temp <= 99) {
-        $("#txtOrderId").val("O00-0" + temp);
-    } else {
-        $("#txtOrderId").val("O00-" + temp);
-    }*/
 
 }
 
@@ -183,8 +163,6 @@ function setDate() {
     $("#txtOrderDate").val(dd[0]+"-"+dd[1]+"-"+dd[2]);
     $("#txtOrderDate").text(dd[0]+"-"+dd[1]+"-"+dd[2]);
 }
-
-
 
 // ________________________add to cart_____________________
 
@@ -342,7 +320,6 @@ function purchaseOrder() {
             }
         }
     });
-
 
 
     /*let orderId = $("#txtOrderId").val();
