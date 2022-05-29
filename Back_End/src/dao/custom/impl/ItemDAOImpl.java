@@ -159,4 +159,16 @@ connection.close();
         conn.close();
         return arrayBuilder;
     }
+
+    @Override
+    public boolean updateQty(String id, int qty) throws SQLException {
+        Connection connection = OrderServlet.ds.getConnection();
+        PreparedStatement pstm = connection.prepareStatement("UPDATE item SET qtyOnHand=(qtyOnHand-?) WHERE code=?");
+        pstm.setObject(1, qty);
+        pstm.setObject(2, id);
+
+        boolean b = pstm.executeUpdate() > 0;
+        connection.close();
+        return b;
+    }
 }

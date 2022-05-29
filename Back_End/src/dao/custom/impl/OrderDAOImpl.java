@@ -8,6 +8,7 @@ import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -18,7 +19,20 @@ public class OrderDAOImpl implements OrderDAO {
 
 
     @Override
-    public boolean add(Orders orders) {return false;}
+    public boolean add(Orders order) throws SQLException {
+        Connection connection = OrderServlet.ds.getConnection();
+        PreparedStatement pstm = connection.prepareStatement("INSERT INTO orders VALUES(?,?,?,?,?,?)");
+        pstm.setObject(1, order.getoId());
+        pstm.setObject(2, order.getDate());
+        pstm.setObject(3, order.getCustomerId());
+        pstm.setObject(4, order.getDiscount());
+        pstm.setObject(5, order.getTotal());
+        pstm.setObject(6, order.getSubTotal());
+
+        boolean b = pstm.executeUpdate() > 0;
+        connection.close();
+        return b;
+    }
 
     @Override
     public boolean delete(String id) {

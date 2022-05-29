@@ -7,6 +7,7 @@ public class OrderDetails {
     private double unitPrice;
     private double total;
 
+
     public OrderDetails(String oId, String itemCode, int qty, double unitPrice, double total) {
         this.setoId(oId);
         this.setItemCode(itemCode);

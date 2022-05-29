@@ -4,6 +4,8 @@ import bo.BOFactory;
 import bo.custom.impl.CustomerBOImpl;
 import bo.custom.impl.ItemBOImpl;
 import bo.custom.impl.OrderBOImpl;
+import dto.OrderDTO;
+import entity.OrderDetails;
 
 import javax.annotation.Resource;
 import javax.json.*;
@@ -15,17 +17,15 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 
 @WebServlet(urlPatterns = "/order")
 public class OrderServlet extends HttpServlet {
     @Resource(name = "java:comp/env/jdbc/pool")
     public static DataSource ds;
-    Connection connection=null;
+    /*Connection connection=null;*/
     CustomerBOImpl customerBO = (CustomerBOImpl) BOFactory.getBoFactory().getBO(BOFactory.BoTypes.CUSTOMER);
     ItemBOImpl itemBO = (ItemBOImpl) BOFactory.getBoFactory().getBO(BOFactory.BoTypes.ITEM);
     OrderBOImpl ordersBO = (OrderBOImpl) BOFactory.getBoFactory().getBO(BOFactory.BoTypes.ORDER);
@@ -37,7 +37,6 @@ public class OrderServlet extends HttpServlet {
         JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
         JsonObjectBuilder dataMsgBuilder = Json.createObjectBuilder();
         PrintWriter writer = resp.getWriter();
-
 
         try {
 
@@ -56,7 +55,6 @@ public class OrderServlet extends HttpServlet {
                     writer.print(dataMsgBuilder.build());
                     break;
 
-
                 case "Load_cus_Id":
                     /*rst  = connection.prepareStatement("SELECT id FROM customer").executeQuery();
                     while (rst.next()){
@@ -69,7 +67,6 @@ public class OrderServlet extends HttpServlet {
                     dataMsgBuilder.add("status",200);
                     writer.print(dataMsgBuilder.build());
                     break;
-
 
                 case "selectedCusData":
                     String cusId = req.getParameter("cusId");
@@ -170,7 +167,31 @@ public class OrderServlet extends HttpServlet {
 
         System.out.println("before if");
         JsonObjectBuilder response = Json.createObjectBuilder();
-        if (saveOrder(order, orderDetail)) {
+
+        ArrayList<OrderDetails> orderDetails = new ArrayList<>();
+
+        for (JsonValue value : orderDetail) {
+            JsonObject jObj = value.asJsonObject();
+            orderDetails.add(new OrderDetails(
+                    order.getString("orderId"),
+                    jObj.getString("itemCode"),
+                    Integer.parseInt(jObj.getString("itemQty")),
+                    Double.parseDouble(jObj.getString("itemPrice")),
+                    Integer.parseInt(jObj.getString("itemTotal"))
+            ));
+        }
+
+        OrderDTO ordersDTO = new OrderDTO(
+                order.getString("orderId"),
+                order.getString("orderDate"),
+                order.getString("customer"),
+                order.getInt("discount"),
+                Double.parseDouble(order.getString("total")),
+                Double.parseDouble(order.getString("subTotal")),
+                orderDetails
+        );
+
+        if (ordersBO.addOrder(ordersDTO)) {
             System.out.println("true");
             resp.setStatus(HttpServletResponse.SC_CREATED);//201
             response.add("status", 200);
@@ -185,6 +206,7 @@ public class OrderServlet extends HttpServlet {
         }
         writer.print(response.build());
     }
+/*
 
     public boolean saveOrder(JsonObject order, JsonArray orderDetail) {
 
@@ -259,6 +281,7 @@ public class OrderServlet extends HttpServlet {
         return pstm.executeUpdate() > 0;
     }
 
+*/
 
 
 }

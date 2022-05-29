@@ -1,5 +1,9 @@
 package dto;
 
+import entity.OrderDetails;
+
+import java.util.ArrayList;
+
 public class OrderDTO {
 
     private String oId;
@@ -8,19 +12,25 @@ public class OrderDTO {
     private int discount;
     private double total;
     private double subTotal;
+    private ArrayList<OrderDetails> orderDetails;
 
-    public OrderDTO(String oId, String date, String customerId, int discount, double total, double subTotal) {
+    public OrderDTO(String oId, String date, String customerId, int discount, double total, double subTotal, ArrayList<OrderDetails> orderDetails) {
         this.setoId(oId);
         this.setDate(date);
         this.setCustomerId(customerId);
         this.setDiscount(discount);
         this.setTotal(total);
         this.setSubTotal(subTotal);
+        this.setOrderDetails(orderDetails);
     }
 
     public OrderDTO() {
     }
 
+    public OrderDTO(String oId, ArrayList<OrderDetails> orderDetails) {
+        this.oId = oId;
+        this.orderDetails = orderDetails;
+    }
 
     public String getoId() {
         return oId;
@@ -70,6 +80,14 @@ public class OrderDTO {
         this.subTotal = subTotal;
     }
 
+    public ArrayList<OrderDetails> getOrderDetails() {
+        return orderDetails;
+    }
+
+    public void setOrderDetails(ArrayList<OrderDetails> orderDetails) {
+        this.orderDetails = orderDetails;
+    }
+
     @Override
     public String toString() {
         return "OrderDTO{" +
@@ -79,6 +97,7 @@ public class OrderDTO {
                 ", discount=" + discount +
                 ", total=" + total +
                 ", subTotal=" + subTotal +
+                ", orderDetails=" + orderDetails +
                 '}';
     }
 }

@@ -13,8 +13,18 @@ $("#dis").val(0);
 $("#btnOrderAdd").click(function (){
     addCart();
 });
+
+
 $("#btnOrderPurchase").click(function (){
     purchaseOrder();
+clearInputItems();
+    generateOrderId();
+    loadAllCustomerIds();
+    loadAllItemIds();
+    setDate();
+    $("#orderTbody").children().remove();
+    clearInputCustomerDetails();
+    console.log("ballo meka wada nh")
 });
 
 
@@ -243,12 +253,17 @@ function checkDuplicates(itemId) {
 
 /* ________Clear Input Field on Selected Item Area ______________*/
 function clearInputItems() {
-    $("#itemIdCmb").val("");
     $("#txtOrderItemName").val("");
     $("#txtQtyOnHand").val("");
     $("#txtPrice").val("");
     $("#txtOrderQty").val("");
 }
+function clearInputCustomerDetails() {
+    $("#txtOCusName").val("");
+    $("#txtAddress").val("");
+    $("#txtSalary").val("");
+}
+
 
 /* ________Discount ______________*/
 function discountCal() {
@@ -270,8 +285,6 @@ function discountCal() {
     console.log(typeof discounted_price);
     $("#lblFullTotal").text(discounted_price);
 }
-
-
 
 
 /* ________Purchase ______________*/
@@ -320,8 +333,6 @@ function purchaseOrder() {
             }
         }
     });
-
-
     /*let orderId = $("#txtOrderId").val();
     let customer = selectedCustomerId;
     let orderDate = $("#txtOrderDate").val();
@@ -343,7 +354,5 @@ function purchaseOrder() {
         var orderDetailObj = new OrderDetailDTO(orderId,tblItemId,tblItemName,tblItemPrice,tblItemQty,tblItemTotal);
         orderDetailDB.push(orderDetailObj);
     }*/
-
-
 
 }
