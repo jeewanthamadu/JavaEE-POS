@@ -2,14 +2,33 @@ package bo.custom.impl;
 
 import bo.custom.CustomerBO;
 import dao.DAOFactory;
+import dao.custom.CustomerDAO;
 import dao.custom.impl.CustomerDAOImpl;
 import dto.CustomerDTO;
 import entity.Customer;
 
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObjectBuilder;
 import java.sql.SQLException;
 
 public class CustomerBOImpl implements CustomerBO {
 CustomerDAOImpl customerDAO = (CustomerDAOImpl) DAOFactory.getDAOFactory().getDAO(DAOFactory.DAOTypes.CUSTOMER);
+
+    @Override
+    public JsonArrayBuilder getAllCustomer() throws SQLException {
+        return customerDAO.getAll();
+    }
+
+    @Override
+    public JsonObjectBuilder generateCustomerID() throws SQLException {
+        return customerDAO.generateID();
+    }
+
+    @Override
+    public JsonArrayBuilder searchCustomer(String id) throws SQLException {
+        return customerDAO.search(id);
+    }
+
     @Override
     public boolean addCustomer(CustomerDTO customerDTO) throws SQLException {
         Customer customer = new Customer(customerDTO.getId(), customerDTO.getName(), customerDTO.getAddress(), customerDTO.getSalary());

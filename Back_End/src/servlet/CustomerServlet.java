@@ -1,9 +1,7 @@
 package servlet;
-
 import bo.BOFactory;
 import bo.custom.impl.CustomerBOImpl;
 import dto.CustomerDTO;
-
 import javax.annotation.Resource;
 import javax.json.*;
 import javax.servlet.ServletException;
@@ -15,9 +13,8 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+
 
 @WebServlet(urlPatterns = "/customer")
 public class CustomerServlet extends HttpServlet {
@@ -36,15 +33,15 @@ public class CustomerServlet extends HttpServlet {
         JsonObjectBuilder dataMsgBuilder = Json.createObjectBuilder();
         PrintWriter writer = resp.getWriter();
 
-        Connection connection=null;
+        /*Connection connection=null;*/
 
         try {
-            connection = ds.getConnection();
+         /*   connection = ds.getConnection();*/
             String option = req.getParameter("option");
             switch (option){
                 case "GetAll":
-                    ResultSet resultSet = connection.prepareStatement("select * from customer").executeQuery();
-                    while (resultSet.next()){
+                    /*ResultSet resultSet = connection.prepareStatement("select * from customer").executeQuery();
+         */           /*while (resultSet.next()){
                         String id = resultSet.getString(1);
                         String name = resultSet.getString(2);
                         String address = resultSet.getString(3);
@@ -58,9 +55,9 @@ public class CustomerServlet extends HttpServlet {
                         objectBuilder.add("salary", salary);
 
                         arrayBuilder.add(objectBuilder.build());
-                    }
-
-                    dataMsgBuilder.add("data", arrayBuilder.build());
+                    }*/
+                    resp.setStatus(HttpServletResponse.SC_OK);//201
+                    dataMsgBuilder.add("data", customerBO.getAllCustomer());
                     dataMsgBuilder.add("massage", "Done");
                     dataMsgBuilder.add("status", "200");
 
@@ -68,7 +65,7 @@ public class CustomerServlet extends HttpServlet {
                     break;
 
                 case "GenId":
-                    ResultSet rst = connection.prepareStatement("SELECT id FROM customer ORDER BY id DESC LIMIT 1").executeQuery();
+                   /* ResultSet rst = connection.prepareStatement("SELECT id FROM customer ORDER BY id DESC LIMIT 1").executeQuery();
                     if (rst.next()) {
                         int tempId = Integer.parseInt(rst.getString(1).split("-")[1]);
                         tempId+=1;
@@ -81,24 +78,36 @@ public class CustomerServlet extends HttpServlet {
                         }
                     }else{
                         objectBuilder.add("id", "C00-000");
-                    }
-                    dataMsgBuilder.add("data",objectBuilder.build());
+                    }*/
+                    dataMsgBuilder.add("data",customerBO.generateCustomerID());
                     dataMsgBuilder.add("message","Done");
                     dataMsgBuilder.add("status",200);
                     writer.print(dataMsgBuilder.build());
 
                     break;
 
+
+                case "SEARCH":
+                    String id = req.getParameter("id");
+                    resp.setStatus(HttpServletResponse.SC_OK);//201
+                    dataMsgBuilder.add("data", customerBO.searchCustomer(id));
+                    dataMsgBuilder.add("massage", "Done");
+                    dataMsgBuilder.add("status", "200");
+
+                    writer.print(dataMsgBuilder.build());
+                    break;
+
+
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-        }finally {
+        }/*finally {
             try {
                 connection.close();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-        }
+        }*/
 
     }
 

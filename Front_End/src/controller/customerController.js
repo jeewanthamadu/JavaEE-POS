@@ -166,7 +166,9 @@ function loadTableCusData (){
 
 /*_________clear text field___________*/
 function clearFields (){
-    $("#txtCusID,#txtCusName,#txtCusAddress,#txtCusSalary").val("");
+    $("#txtCusName,#txtCusAddress,#txtCusSalary").val("");
+    loadTableCusData();
+    generateId();
 }
 
 /*_________field focusing___________*/
@@ -191,8 +193,33 @@ $("#txtCusAddress").keydown(function (event) {
 /*_________Customer Search bar___________*/
 $("#btnCusSearch").click(function (){
 
+    if (!$("#txtCusSearch").val()) {
+        loadTableCusData();
+        return;
+    }
 
-    var searchId = $("#txtCusSearch").val();
+   $.ajax({
+        url: "http://localhost:8080/Back_End/customer?option=SEARCH",
+       method: "GET",
+       data: {
+            id: $("#txtCusSearch").val()
+        }, success: function (resp) {
+            if (resp.status == 200) {
+                $("#customerTableBody").empty();
+                for (const customer of resp.data) {
+                    let row = `<tr><td>${customer.id}</td><td>${customer.name}</td><td>${customer.address}</td><td>${customer.salary}</td></tr>`;
+                    $("#customerTableBody").append(row);
+                    bindCustomer();
+                }
+            } else {
+                alert(resp.data);
+                loadTableCusData(); //load all customers
+                clearFields();   //Clear Input Fields
+            }
+        }
+    });
+
+   /* var searchId = $("#txtCusSearch").val();
     var response = searchCustomer(searchId);
     if (response){
         $("#txtCusID").val(response.getCustomerID());
@@ -202,19 +229,18 @@ $("#btnCusSearch").click(function (){
     }else {
         alert("Invalid customer Search");
         clearFields();
-    }
+    }*/
 
 });
 
 
-function searchCustomer (id){
+/*function searchCustomer (id){
     for (let i=0;i<customerDB.length;i++){
         if (customerDB[i].getCustomerID()==id){
             return customerDB[i];
-
         }
     }
-}
+}*/
 
 
 /*_________Auto Generate ID___________*/

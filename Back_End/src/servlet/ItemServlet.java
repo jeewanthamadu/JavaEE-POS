@@ -16,8 +16,6 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
@@ -38,14 +36,15 @@ public class ItemServlet extends HttpServlet {
         JsonObjectBuilder dataMsgBuilder = Json.createObjectBuilder();
         PrintWriter writer = resp.getWriter();
 
-        Connection connection = null;
+     /*   Connection connection = null;*/
 
         try {
-            connection = ds.getConnection();
+//            connection = ds.getConnection();
             String option = req.getParameter("option");
             switch (option) {
                 case "GetAll":
-                    ResultSet resultSet = connection.prepareStatement("select * from item").executeQuery();
+                    resp.setStatus(HttpServletResponse.SC_OK);//201
+                    /*ResultSet resultSet = connection.prepareStatement("select * from item").executeQuery();
                     while (resultSet.next()) {
                         String id = resultSet.getString(1);
                         String name = resultSet.getString(2);
@@ -61,8 +60,8 @@ public class ItemServlet extends HttpServlet {
 
                         arrayBuilder.add(objectBuilder.build());
                     }
-
-                    dataMsgBuilder.add("data", arrayBuilder.build());
+*/
+                    dataMsgBuilder.add("data", itemBO.getAllItems());
                     dataMsgBuilder.add("massage", "Done");
                     dataMsgBuilder.add("status", "200");
 
@@ -71,7 +70,7 @@ public class ItemServlet extends HttpServlet {
 
 
                 case "GenId":
-                    ResultSet rst = connection.prepareStatement("SELECT code FROM item ORDER BY code DESC LIMIT 1").executeQuery();
+                    /*ResultSet rst = connection.prepareStatement("SELECT code FROM item ORDER BY code DESC LIMIT 1").executeQuery();
                     if (rst.next()) {
                         int tempId = Integer.parseInt(rst.getString(1).split("-")[1]);
                         tempId+=1;
@@ -84,25 +83,35 @@ public class ItemServlet extends HttpServlet {
                         }
                     }else{
                         objectBuilder.add("code", "I00-000");
-                    }
-                    dataMsgBuilder.add("data",objectBuilder.build());
+                    }*/
+                    dataMsgBuilder.add("data",itemBO.generateItemID());
                     dataMsgBuilder.add("message","Done");
                     dataMsgBuilder.add("status",200);
                     writer.print(dataMsgBuilder.build());
 
                     break;
 
+                case "SEARCH":
+                    String id = req.getParameter("id");
+                    resp.setStatus(HttpServletResponse.SC_OK);//201
+                    dataMsgBuilder.add("data", itemBO.searchItem(id));
+                    dataMsgBuilder.add("massage", "Done");
+                    dataMsgBuilder.add("status", "200");
+
+                    writer.print(dataMsgBuilder.build());
+                    break;
+
 
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-        } finally {
+        } /*finally {
             try {
                 connection.close();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-        }
+        }*/
 
     }
 

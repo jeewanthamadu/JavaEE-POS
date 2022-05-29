@@ -130,13 +130,42 @@ function loadTableItemData () {
 
 /*_________clear Item text field___________*/
 function clearItemFields (){
-    $("#txtItemID,#txtItemName,#txtItemQty,#txtItemPrice").val("");
+    $("#txtItemName,#txtItemQty,#txtItemPrice").val("");
+    loadTableItemData();
+    generateItemId();
 }
 
 
 /*_________Item Search bar___________*/
 $("#btnItemSearch").click(function (){
-    var searchId = $("#txtItemSearch").val();
+
+    if (!$("#txtItemSearch").val()) {
+        loadTableCusData();
+        return;
+    }
+
+    $.ajax({
+        url: "http://localhost:8080/Back_End/item?option=SEARCH",
+        method: "GET",
+        data: {
+            id: $("#txtItemSearch").val()
+        }, success: function (resp) {
+            if (resp.status == 200) {
+                $("#tblItem").empty();
+                for (const item of resp.data) {
+                    let raw = `<tr><td>${item.itemId}</td><td>${item.itemName}</td><td>${item.itemQty}</td><td>${item.itemPrice}</td></tr>`
+                    $("#tblItem").append(raw);
+                    bindItem();
+                }
+            } else {
+                alert(resp.data);
+                loadTableItemData(); //load all customers
+                clearFields();   //Clear Input Fields
+            }
+        }
+    });
+
+   /* var searchId = $("#txtItemSearch").val();
     var response = searchItem(searchId);
     if (response){
         $("#txtItemID").val(response.getItemID());
@@ -147,16 +176,16 @@ $("#btnItemSearch").click(function (){
         alert("Invalid customer Search");
         clearFields();
     }
-});
+});*/
 
 
-function searchItem (id){
+/*function searchItem (id){
     for (let i=0;i<itemDB.length;i++){
         if (itemDB[i].getItemID()==id){
             return itemDB[i];
         }
-    }
-}
+    }*/
+});
 
 /*_________Auto Generate Item ID___________*/
 function generateItemId() {
