@@ -3,6 +3,8 @@ package dao.custom.impl;
 import dao.custom.CustomerDAO;
 import entity.Customer;
 import servlet.CustomerServlet;
+import servlet.OrderServlet;
+
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
@@ -122,6 +124,39 @@ conn.close();
 
            }
         conn.close();
+        return arrayBuilder;
+    }
+
+    @Override
+    public JsonArrayBuilder loadCusID() throws SQLException {
+        Connection conn = OrderServlet.ds.getConnection();
+        ResultSet rst  = conn.prepareStatement("SELECT id FROM customer").executeQuery();
+        while (rst.next()){
+            String id = rst.getString(1);
+            objectBuilder.add("id",id);
+            arrayBuilder.add(objectBuilder.build());
+        }
+        conn.close();
+        return arrayBuilder;
+    }
+
+    @Override
+    public JsonArrayBuilder selectCusData(String id) throws SQLException {
+        Connection connection = OrderServlet.ds.getConnection();
+        PreparedStatement pstm = connection.prepareStatement("SELECT * FROM customer WHERE id=?");
+        pstm.setObject(1,id);
+        ResultSet rst = pstm.executeQuery();
+        if (rst.next()){
+            String cusName = rst.getString(2);
+            String cusAddress = rst.getString(3);
+            String cusSalary = rst.getString(4);
+            objectBuilder.add("cusName",cusName);
+            objectBuilder.add("cusAddress",cusAddress);
+            objectBuilder.add("cusSalary",cusSalary);
+
+            arrayBuilder.add(objectBuilder.build());
+        }
+        connection.close();
         return arrayBuilder;
     }
 }

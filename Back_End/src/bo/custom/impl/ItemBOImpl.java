@@ -30,6 +30,16 @@ ItemDAOImpl itemDAO = (ItemDAOImpl) DAOFactory.getDAOFactory().getDAO(DAOFactory
     }
 
     @Override
+    public JsonArrayBuilder loadItemIds() throws SQLException {
+        return itemDAO.loadItemID();
+    }
+
+    @Override
+    public JsonArrayBuilder selectItemData(String id) throws SQLException {
+        return itemDAO.selectCusData(id);
+    }
+
+    @Override
     public boolean addItem(ItemDTO itemDTO) throws SQLException {
         Item item = new Item(itemDTO.getCode(), itemDTO.getDescription(), itemDTO.getQtyOnHand(), itemDTO.getUnitPrice());
         return itemDAO.add(item);

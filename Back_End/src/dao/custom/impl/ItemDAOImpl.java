@@ -3,6 +3,8 @@ package dao.custom.impl;
 import dao.custom.ItemDAO;
 import entity.Item;
 import servlet.ItemServlet;
+import servlet.OrderServlet;
+
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
@@ -124,4 +126,37 @@ connection.close();
         return arrayBuilder;
     }
 
+    @Override
+    public JsonArrayBuilder loadItemID() throws SQLException {
+        Connection conn = OrderServlet.ds.getConnection();
+        ResultSet rst  = conn.prepareStatement("SELECT code FROM item").executeQuery();
+        while (rst.next()){
+            String code = rst.getString(1);
+            objectBuilder.add("code",code);
+            arrayBuilder.add(objectBuilder.build());
+        }
+        conn.close();
+        return arrayBuilder;
+    }
+
+    @Override
+    public JsonArrayBuilder selectCusData(String id) throws SQLException {
+        Connection conn = OrderServlet.ds.getConnection();
+        PreparedStatement pstm = conn.prepareStatement("SELECT * FROM item WHERE code=?");
+        pstm.setObject(1,id);
+        ResultSet rst = pstm.executeQuery();
+        if (rst.next()){
+            String itemName = rst.getString(2);
+            String itemQtyOnHand = rst.getString(3);
+            String itemPrice = rst.getString(4);
+            objectBuilder.add("itemName",itemName);
+            objectBuilder.add("itemQtyOnHand",itemQtyOnHand);
+            objectBuilder.add("itemPrice",itemPrice);
+
+            arrayBuilder.add(objectBuilder.build());
+        }
+
+        conn.close();
+        return arrayBuilder;
+    }
 }

@@ -11,6 +11,8 @@ public interface ItemBO extends SuperBO {
     JsonArrayBuilder getAllItems() throws SQLException;
     JsonObjectBuilder generateItemID() throws SQLException;
     JsonArrayBuilder searchItem(String id) throws SQLException;
+    JsonArrayBuilder loadItemIds() throws SQLException;
+    JsonArrayBuilder selectItemData(String id) throws SQLException;
     boolean addItem(ItemDTO itemDTO) throws SQLException;
     boolean deleteItem(String id) throws SQLException;
     boolean updateItem(ItemDTO itemDTO) throws SQLException;

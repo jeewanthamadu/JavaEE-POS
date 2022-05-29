@@ -30,6 +30,16 @@ CustomerDAOImpl customerDAO = (CustomerDAOImpl) DAOFactory.getDAOFactory().getDA
     }
 
     @Override
+    public JsonArrayBuilder loadCusID() throws SQLException {
+        return customerDAO.loadCusID();
+    }
+
+    @Override
+    public JsonArrayBuilder selectCusData(String id) throws SQLException {
+        return customerDAO.selectCusData(id);
+    }
+
+    @Override
     public boolean addCustomer(CustomerDTO customerDTO) throws SQLException {
         Customer customer = new Customer(customerDTO.getId(), customerDTO.getName(), customerDTO.getAddress(), customerDTO.getSalary());
         return customerDAO.add(customer);
